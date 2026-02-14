@@ -1,16 +1,32 @@
 ## 独立的加解密 Spring Boot Starter
 
-# TypeHandler 使用说明文档
+# TypeHandler 使用说明文档（含依赖配置）
 
-## 📌 功能概述
+## 📦 一、Maven 依赖配置
+
+在使用 `TypeHandler` 之前，需要先添加以下依赖：
+
+```xml
+<dependency>
+    <groupId>cloud.cqcloud.platform</groupId>
+    <artifactId>ylc-rpamis-spring-boot-starter</artifactId>
+    <version>1.0.3</version>
+</dependency>
+```
+
+**说明：** 该依赖包含了 `TypeHandler` 所需的 `Sm4Utils` 加密工具类及相关依赖。
+
+---
+
+## 📌 二、功能概述
 
 `TypeHandler` 是一个基于 MyBatis 的**自定义类型处理器**，用于实现字段级别的**自动加密存储**和**自动解密查询**。它采用 **SM4 国密算法**对敏感数据进行加密处理，同时提供了便捷的对象加解密工具方法。
 
 ---
 
-## 一、MyBatis 自动加解密配置
+## 三、MyBatis 自动加解密配置
 
-### 1.1 实体类配置（注解方式）
+### 3.1 实体类配置（注解方式）
 
 在需要加解密的实体字段上添加 `@TableField` 注解，指定 `typeHandler`：
 
@@ -38,7 +54,7 @@ public class User {
 
 ---
 
-### 1.2 XML 映射文件配置
+### 3.2 XML 映射文件配置
 
 在 `<result>` 或 `<id>` 标签中指定 `typeHandler`：
 
@@ -66,7 +82,7 @@ public class User {
 
 ---
 
-### 1.3 查询示例
+### 3.3 查询示例
 
 ```java
 @Mapper
@@ -87,11 +103,11 @@ public interface UserMapper {
 
 ---
 
-## 二、手动加解密工具方法
+## 四、手动加解密工具方法
 
 除了 MyBatis 自动处理外，`TypeHandler` 还提供了手动加解密的静态工具方法。
 
-### 2.1 单个字符串加解密
+### 4.1 单个字符串加解密
 
 ```java
 // 加密
@@ -104,7 +120,7 @@ System.out.println(encrypted); // 5nJgY3X... (Base64密文)
 
 ---
 
-### 2.2 对象字段批量解密
+### 4.2 对象字段批量解密
 
 ```java
 // 从数据库查询出的对象，字段已是明文，通常不需要手动解密
@@ -128,7 +144,7 @@ wxOpenid, miniOpenid, ykbTalkOpenid, dingTalkOpenid
 
 ---
 
-### 2.3 对象字段批量加密
+### 4.3 对象字段批量加密
 
 ```java
 // 新增用户，手动加密（通常由 MyBatis 自动处理，特殊场景使用）
@@ -148,7 +164,7 @@ userMapper.insert(user); // 此时字段已是密文
 
 ---
 
-### 2.4 函数式编程方式加解密
+### 4.4 函数式编程方式加解密
 
 ```java
 // 灵活指定 getter/setter 进行加密
@@ -160,11 +176,11 @@ TypeHandler.encryptField(user,
 
 ---
 
-## 三、@前缀特殊处理机制
+## 五、@前缀特殊处理机制
 
 处理器支持**带前缀的加密存储**格式，适用于需要保留标识符的场景。
 
-### 3.1 存储格式
+### 5.1 存储格式
 
 数据库存储格式：`前缀@密文`
 
@@ -174,13 +190,13 @@ TypeHandler.encryptField(user,
 加密后：weimeilayer@5nJgY3XzF8q...
 ```
 
-### 3.2 解密行为
+### 5.2 解密行为
 
 - **自动识别 `@` 符号**：保留 `@` 之前的内容作为前缀
 - **仅解密 `@` 之后的部分**
 - 最终结果：`前缀@明文`
 
-### 3.3 使用场景
+### 5.3 使用场景
 
 ```java
 // 插入时自动加密
@@ -198,7 +214,7 @@ System.out.println(user.getEmail());
 
 ---
 
-## 四、常见问题
+## 六、常见问题
 
 ### ❓ 1. 插入时没有自动加密
 - 检查实体字段是否添加 `@TableField(typeHandler = TypeHandler.class)`
@@ -213,9 +229,13 @@ System.out.println(user.getEmail());
 - 密钥是原始字符串，不是 MD5 值（Sm4Utils 内部会自动 MD5）
 - 检查待加密/解密字符串是否为 null 或空字符串
 
+### ❓ 4. 依赖冲突
+- 确保 `ylc-rpamis-spring-boot-starter` 版本为 1.0.3 或以上
+- 检查是否与其他加密库存在冲突
+
 ---
 
-## 五、安全建议
+## 七、安全建议
 
 1. **密钥管理**：`SM4_PRIVATE_KEY` 不应硬编码在代码中，建议通过配置中心或环境变量注入
 2. **字段选择**：仅对必要的敏感字段进行加解密，避免性能损耗
@@ -223,7 +243,7 @@ System.out.println(user.getEmail());
 
 ---
 
-## 六、完整示例代码
+## 八、完整示例代码
 
 ```java
 @Service
@@ -251,4 +271,4 @@ public class UserService {
 
 ---
 
-**总结：** 只需在实体字段或 XML 中配置 `typeHandler`，即可实现**全自动的字段级加解密**，无需任何业务代码侵入。手动加解密方法主要用于特殊场景或批量处理。
+**总结：** 只需添加依赖并在实体字段或 XML 中配置 `typeHandler`，即可实现**全自动的字段级加解密**，无需任何业务代码侵入。手动加解密方法主要用于特殊场景或批量处理。
