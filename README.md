@@ -98,6 +98,49 @@ public interface UserMapper {
     int updateById(User user);
 }
 ```
+**实体操作**
+```bash
+SysUserVo vo = new SysUserVo();
+// 解密信息
+Optional.ofNullable(user).ifPresent(TypeHandler::decrypt);
+// 拷贝属性
+BeanUtils.copyProperties(user, vo);
+
+或者
+UserInfo userInfo = new UserInfo();
+// 解密
+TypeHandler.decrypt(sysUser);
+// 设置用户信息
+userInfo.setSysUser(sysUser);
+分页查询
+public IPage<SysUserVo> getUsersWithRolePage(Page<?> page, SysUserDto dto) {
+    TypeHandler.encryptField(dto, SysUserDto::getUsername, SysUserDto::setUsername);
+    TypeHandler.encryptField(dto, SysUserDto::getPhone, SysUserDto::setPhone);
+    return baseMapper.getUsersWithRolePage(page, dto, DataScope.of());
+}
+/**
+ * 根据用户名获取用户列表
+ * @param username
+ * @return
+ */
+@Override
+public List<SysUser> getUserListByUserName(String username) {
+    // 1. 查询用户列表
+    List<SysUser> userList = baseMapper.selectList(
+            Wrappers.<SysUser>lambdaQuery()
+                    .like(SysUser::getUsername, TypeHandler.encryptText(username))
+    );
+    // 2. 批量解密（如果查询结果不为空）
+    Optional.ofNullable(userList)
+            .filter(list -> !list.isEmpty())
+            .ifPresent(list -> list.forEach(TypeHandler::decrypt));
+    // 3. 返回解密后的列表
+    return userList;
+}
+```
+
+
+```
 
 **无需手动调用任何加解密方法**，MyBatis 会自动处理。
 
@@ -268,7 +311,12 @@ public class UserService {
     }
 }
 ```
-
+<distributionManagement>
+    <snapshotRepository>
+        <id>central</id>
+        <url>https://central.sonatype.com/repository/maven-snapshots</url>
+    </snapshotRepository>
+</distributionManagement>
 ---
 
 **总结：** 只需添加依赖并在实体字段或 XML 中配置 `typeHandler`，即可实现**全自动的字段级加解密**，无需任何业务代码侵入。手动加解密方法主要用于特殊场景或批量处理。
