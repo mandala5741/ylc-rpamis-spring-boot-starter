@@ -197,6 +197,12 @@
                 <artifactId>central-publishing-maven-plugin</artifactId>
                 <version>${central.publishing.plugin.version}</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <!-- 必须与 settings.xml 中的 server id 一致 -->
+                    <publishingServerId>central</publishingServerId>
+                    <!-- true 表示上传后自动发布，省去手动点击的步骤-->
+                    <autoPublish>true</autoPublish>
+                </configuration>
             </plugin>
             <!-- Maven Deploy 插件 -->
             <plugin>
