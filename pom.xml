@@ -137,6 +137,12 @@
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
                 <version>${spring.checkstyle.version}</version>
             </plugin>
+            <!-- Maven Deploy 插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven.deploy.plugin.version}</version>
+            </plugin>
             <!-- 源码打包插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -151,7 +157,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <!-- Javadoc 打包插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -203,12 +208,6 @@
                     <!-- true 表示上传后自动发布，省去手动点击的步骤-->
                     <autoPublish>true</autoPublish>
                 </configuration>
-            </plugin>
-            <!-- Maven Deploy 插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>${maven.deploy.plugin.version}</version>
             </plugin>
         </plugins>
     </build>
