@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>cloud.cqcloud.platform</groupId>
     <artifactId>ylc-rpamis-spring-boot-starter</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>rpamis Spring Boot Starter</name>
     <description>基于mybatis-plus进行加解密 Spring Boot Starter</description>
     <url>https://github.com/mandala5741/ylc-rpamis-spring-boot-starter</url>
