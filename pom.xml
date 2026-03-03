@@ -13,7 +13,7 @@
         <bcprov.version>1.83</bcprov.version>
         <hutool.version>5.8.43</hutool.version>
         <knife4j.version>4.5.0</knife4j.version>
-        <spring-boot.version>3.5.10</spring-boot.version>
+        <spring-boot.version>3.5.11</spring-boot.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.release>17</maven.compiler.release>
@@ -116,6 +116,10 @@
             <id>central</id>
             <url>https://central.sonatype.com/api/v1/publisher</url>
         </repository>
+		<snapshotRepository>
+            <id>central</id>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
     <build>
         <plugins>

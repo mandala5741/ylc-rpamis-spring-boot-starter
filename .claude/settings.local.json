@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git:*)",
+      "Bash(java:*)",
+      "Bash(gh pr:*)",
+      "Bash(head:*)",
+      "Bash(cd:*)"
+    ]
+  }
+}
